@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mounjaro Tracker</title>
+    <style>
+        :root {
+            --color-cream-50: rgba(252, 252, 249, 1);
+            --color-cream-100: rgba(255, 255, 253, 1);
+            --color-teal-500: rgba(33, 128, 141, 1);
+            --color-teal-600: rgba(29, 116, 128, 1);
+            --color-teal-700: rgba(26, 104, 115, 1);
+            --color-teal-300: rgba(50, 184, 198, 1);
+            --color-slate-900: rgba(19, 52, 59, 1);
+            --color-slate-500: rgba(98, 108, 113, 1);
+            --color-brown-600-rgb: 94, 82, 64;
+            --color-teal-500-rgb: 33, 128, 141;
+            --color-charcoal-700: rgba(31, 33, 33, 1);
+            --color-charcoal-800: rgba(38, 40, 40, 1);
+            --color-gray-200: rgba(245, 245, 245, 1);
+            --color-gray-300: rgba(167, 169, 169, 1);
+            --color-gray-400: rgba(119, 124, 124, 1);
+            --color-gray-400-rgb: 119, 124, 124;
+            
+            --color-background: var(--color-cream-50);
+            --color-surface: var(--color-cream-100);
+            --color-text: var(--color-slate-900);
+            --color-text-secondary: var(--color-slate-500);
+            --color-primary: var(--color-teal-500);
+            --color-primary-hover: var(--color-teal-600);
+            --color-primary-active: var(--color-teal-700);
+            --color-secondary: rgba(var(--color-brown-600-rgb), 0.12);
+            --color-secondary-hover: rgba(var(--color-brown-600-rgb), 0.2);
+            --color-border: rgba(var(--color-brown-600-rgb), 0.2);
+            --color-card-border: rgba(var(--color-brown-600-rgb), 0.12);
+            --color-btn-primary-text: var(--color-cream-50);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --color-background: var(--color-charcoal-700);
+                --color-surface: var(--color-charcoal-800);
+                --color-text: var(--color-gray-200);
+                --color-text-secondary: rgba(var(--color-gray-300), 0.7);
+                --color-primary: var(--color-teal-300);
+                --color-secondary: rgba(var(--color-gray-400-rgb), 0.15);
+                --color-secondary-hover: rgba(var(--color-gray-400-rgb), 0.25);
+                --color-border: rgba(var(--color-gray-400-rgb), 0.3);
+                --color-card-border: rgba(var(--color-gray-400-rgb), 0.2);
+                --color-btn-primary-text: var(--color-slate-900);
+            }
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--color-background);
+            color: var(--color-text);
+            padding: 0;
+            margin: 0;
+            min-height: 100vh;
+            transition: background 0.3s ease;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-teal-700) 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            animation: slideDown 0.5s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .header .subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .card {
+            background: var(--color-surface);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            border: 1px solid var(--color-card-border);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            animation: fadeIn 0.5s ease;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card h2 {
+            font-size: 20px;
+            margin-bottom: 16px;
+            color: var(--color-text);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .icon {
+            font-size: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--color-text);
+            font-size: 14px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            background: var(--color-surface);
+            color: var(--color-text);
+            font-size: 16px;
+            transition: border 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(var(--color-teal-500-rgb), 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+            font-family: inherit;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--color-primary);
+            color: var(--color-btn-primary-text);
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn:hover {
+            background: var(--color-primary-hover);
+            transform: scale(1.02);
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 12px;
+            background: var(--color-secondary);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-teal-300) 100%);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+            animation: progressPulse 2s ease infinite;
+        }
+
+        @keyframes progressPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .stat-box {
+            background: var(--color-secondary);
+            padding: 16px;
+            border-radius: 12px;
+            text-align: center;
+            transition: transform 0.2s ease;
+        }
+
+        .stat-box:hover {
+            transform: scale(1.05);
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--color-text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .dose-item {
+            background: var(--color-secondary);
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            border-left: 4px solid var(--color-primary);
+            animation: slideIn 0.3s ease;
+            transition: all 0.2s ease;
+        }
+
+        .dose-item:hover {
+            transform: translateX(4px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .dose-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .dose-date {
+            font-weight: 600;
+            color: var(--color-text);
+        }
+
+        .dose-amount {
+            background: var(--color-primary);
+            color: var(--color-btn-primary-text);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .dose-notes {
+            color: var(--color-text-secondary);
+            font-size: 14px;
+            margin-top: 8px;
+        }
+
+        .motivation-box {
+            background: linear-gradient(135deg, rgba(var(--color-teal-500-rgb), 0.1) 0%, rgba(var(--color-teal-500-rgb), 0.2) 100%);
+            padding: 20px;
+            border-radius: 12px;
+            border: 2px solid var(--color-primary);
+            margin-top: 16px;
+            text-align: center;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .motivation-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+
+        .motivation-text {
+            font-size: 16px;
+            line-height: 1.6;
+            color: var(--color-text);
+            font-weight: 500;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--color-text-secondary);
+        }
+
+        .empty-icon {
+            font-size: 64px;
+            opacity: 0.5;
+            margin-bottom: 16px;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: var(--color-text-secondary);
+            font-size: 12px;
+        }
+
+        .delete-btn {
+            background: #ff4444;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-top: 8px;
+            transition: background 0.2s ease;
+        }
+
+        .delete-btn:hover {
+            background: #cc0000;
+        }
+
+        .tab-container {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--color-border);
+        }
+
+        .tab {
+            flex: 1;
+            padding: 12px;
+            background: transparent;
+            border: none;
+            color: var(--color-text-secondary);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .tab.active {
+            color: var(--color-primary);
+            border-bottom-color: var(--color-primary);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>💉 Mounjaro Tracker</h1>
+        <p class="subtitle">Seguimiento de tu progreso semanal</p>
+    </div>
+
+    <div class="container">
+        <div class="tab-container">
+            <button class="tab active" onclick="showTab('registro')">📝 Registro</button>
+            <button class="tab" onclick="showTab('historial')">📊 Historial</button>
+            <button class="tab" onclick="showTab('motivacion')">💪 Motivación</button>
+        </div>
+
+        <div id="registro" class="tab-content active">
+            <div class="card">
+                <h2><span class="icon">💉</span> Registrar Nueva Dosis</h2>
+                <form id="doseForm">
+                    <div class="form-group">
+                        <label for="doseDate">Fecha de la dosis</label>
+                        <input type="date" id="doseDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="doseAmount">Cantidad (mg)</label>
+                        <select id="doseAmount" required>
+                            <option value="2.5">2.5 mg</option>
+                            <option value="5">5 mg</option>
+                            <option value="7.5">7.5 mg</option>
+                            <option value="10">10 mg</option>
+                            <option value="12.5">12.5 mg</option>
+                            <option value="15">15 mg</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="weight">Peso actual (kg) - opcional</label>
+                        <input type="number" id="weight" step="0.1" placeholder="Ej: 85.5">
+                    </div>
+                    <div class="form-group">
+                        <label for="notes">Notas (cómo te sientes, efectos, etc.)</label>
+                        <textarea id="notes" placeholder="Ej: Me sentí bien, sin efectos secundarios"></textarea>
+                    </div>
+                    <button type="submit" class="btn">
+                        <span>➕</span> Guardar Dosis
+                    </button>
+                </form>
+            </div>
+
+            <div class="card">
+                <h2><span class="icon">📈</span> Tu Progreso</h2>
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div class="stat-value" id="totalDoses">0</div>
+                        <div class="stat-label">Dosis Totales</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" id="currentDose">2.5</div>
+                        <div class="stat-label">Dosis Actual (mg)</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" id="weekStreak">0</div>
+                        <div class="stat-label">Semanas</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" id="weightLoss">-</div>
+                        <div class="stat-label">Peso Perdido (kg)</div>
+                    </div>
+                </div>
+                <div style="margin-top: 20px;">
+                    <label style="font-size: 12px; color: var(--color-text-secondary);">Progreso hacia próxima dosis</label>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+                    </div>
+                    <p style="text-align: center; color: var(--color-text-secondary); font-size: 14px;" id="progressText">Registra tu primera dosis</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="historial" class="tab-content">
+            <div class="card">
+                <h2><span class="icon">📋</span> Historial de Dosis</h2>
+                <div id="doseHistory"></div>
+            </div>
+        </div>
+
+        <div id="motivacion" class="tab-content">
+            <div class="card">
+                <h2><span class="icon">💪</span> Tu Motivación Diaria</h2>
+                <div class="motivation-box" id="motivationBox">
+                    <div class="motivation-icon">🌟</div>
+                    <div class="motivation-text" id="motivationText">Cargando consejo...</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2><span class="icon">🎯</span> Consejos para el Éxito</h2>
+                <div style="line-height: 1.8; color: var(--color-text);">
+                    <p><strong>✅ Mantén la consistencia:</strong> Administra tu dosis el mismo día cada semana</p>
+                    <p><strong>💧 Hidrátate bien:</strong> Bebe suficiente agua durante el día</p>
+                    <p><strong>🥗 Alimentación equilibrada:</strong> Combina el tratamiento con comidas saludables</p>
+                    <p><strong>🏃 Actividad física:</strong> Incluso caminar 30 minutos ayuda</p>
+                    <p><strong>😴 Descansa bien:</strong> El sueño es clave para tu metabolismo</p>
+                    <p><strong>📊 Registra tu progreso:</strong> Usa esta app para ver tu evolución</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            Desarrollado por Manuel Cabrera Garcia @maanucg.02
+        </div>
+    </div>
+
+    <script>
+        const motivationalQuotes = [
+            { icon: '🌟', text: '¡Cada dosis te acerca más a tu meta! Tu constancia es tu mejor aliado.' },
+            { icon: '💪', text: 'Recuerda: Este es un tratamiento a largo plazo. Los resultados llegan con paciencia.' },
+            { icon: '🎯', text: 'Has tomado una excelente decisión para tu salud. ¡Sigue adelante!' },
+            { icon: '🌈', text: 'El viaje de mil kilómetros comienza con un solo paso. Ya estás en camino.' },
+            { icon: '⭐', text: 'Tu cuerpo te agradece cada esfuerzo que haces por cuidarte.' },
+            { icon: '🔥', text: 'La consistencia es clave: una dosis semanal puede cambiar tu vida.' },
+            { icon: '🏆', text: 'Estás invirtiendo en ti mismo. Eso te hace un ganador.' },
+            { icon: '💚', text: 'Celebra cada pequeño logro. El progreso es progreso, sin importar el tamaño.' },
+            { icon: '🚀', text: 'No compares tu capítulo 1 con el capítulo 20 de alguien más.' },
+            { icon: '✨', text: 'Los cambios duraderos requieren tiempo. Confía en el proceso.' },
+            { icon: '🌺', text: 'Recuerda por qué empezaste este viaje. Tu futuro yo te lo agradecerá.' },
+            { icon: '🎨', text: 'Cada semana escribes una nueva página de tu historia de éxito.' }
+        ];
+
+        let doses = JSON.parse(localStorage.getItem('mounjaroDoses') || '[]');
+
+        function showTab(tabName) {
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(tabName).classList.add('active');
+            
+            if (tabName === 'motivacion') {
+                updateMotivation();
+            }
+        }
+
+        function updateMotivation() {
+            const randomQuote = motivationalQuotes[Math.floor(Math.random() * motivationalQuotes.length)];
+            document.querySelector('.motivation-icon').textContent = randomQuote.icon;
+            document.getElementById('motivationText').textContent = randomQuote.text;
+        }
+
+        function updateStats() {
+            const totalDoses = doses.length;
+            document.getElementById('totalDoses').textContent = totalDoses;
+            
+            if (totalDoses > 0) {
+                const latestDose = doses[doses.length - 1];
+                document.getElementById('currentDose').textContent = latestDose.amount;
+                
+                const firstWeight = doses.find(d => d.weight)?.weight;
+                const lastWeight = doses[doses.length - 1].weight;
+                if (firstWeight && lastWeight) {
+                    const weightLoss = (firstWeight - lastWeight).toFixed(1);
+                    document.getElementById('weightLoss').textContent = weightLoss > 0 ? weightLoss : '-';
+                }
+                
+                document.getElementById('weekStreak').textContent = totalDoses;
+                
+                const lastDate = new Date(latestDose.date);
+                const today = new Date();
+                const daysSinceLastDose = Math.floor((today - lastDate) / (1000 * 60 * 60 * 24));
+                const progress = Math.min((daysSinceLastDose / 7) * 100, 100);
+                
+                document.getElementById('progressBar').style.width = progress + '%';
+                
+                if (daysSinceLastDose < 7) {
+                    document.getElementById('progressText').textContent = `${7 - daysSinceLastDose} días para tu próxima dosis`;
+                } else {
+                    document.getElementById('progressText').textContent = '¡Es hora de tu próxima dosis!';
+                }
+            }
+        }
+
+        function renderHistory() {
+            const historyDiv = document.getElementById('doseHistory');
+            
+            if (doses.length === 0) {
+                historyDiv.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">📭</div>
+                        <p>Aún no has registrado ninguna dosis</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            historyDiv.innerHTML = doses
+                .slice()
+                .reverse()
+                .map((dose, index) => {
+                    const realIndex = doses.length - 1 - index;
+                    return `
+                        <div class="dose-item">
+                            <div class="dose-header">
+                                <span class="dose-date">${new Date(dose.date).toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                                <span class="dose-amount">${dose.amount} mg</span>
+                            </div>
+                            ${dose.weight ? `<div style="color: var(--color-text-secondary); font-size: 14px; margin-top: 4px;">⚖️ Peso: ${dose.weight} kg</div>` : ''}
+                            ${dose.notes ? `<div class="dose-notes">💭 ${dose.notes}</div>` : ''}
+                            <button class="delete-btn" onclick="deleteDose(${realIndex})">🗑️ Eliminar</button>
+                        </div>
+                    `;
+                })
+                .join('');
+        }
+
+        function deleteDose(index) {
+            if (confirm('¿Estás seguro de que quieres eliminar esta dosis?')) {
+                doses.splice(index, 1);
+                localStorage.setItem('mounjaroDoses', JSON.stringify(doses));
+                updateStats();
+                renderHistory();
+            }
+        }
+
+        document.getElementById('doseForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const dose = {
+                date: document.getElementById('doseDate').value,
+                amount: document.getElementById('doseAmount').value,
+                weight: document.getElementById('weight').value || null,
+                notes: document.getElementById('notes').value
+            };
+            
+            doses.push(dose);
+            localStorage.setItem('mounjaroDoses', JSON.stringify(doses));
+            
+            document.getElementById('doseForm').reset();
+            document.getElementById('doseDate').value = new Date().toISOString().split('T')[0];
+            
+            updateStats();
+            renderHistory();
+            
+            alert('✅ ¡Dosis registrada con éxito!');
+        });
+
+        document.getElementById('doseDate').value = new Date().toISOString().split('T')[0];
+        
+        updateStats();
+        renderHistory();
+        updateMotivation();
+    </script>
+</body>
+</html>
